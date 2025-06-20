@@ -1,66 +1,70 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+{% extends 'base.html.twig' %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('home') }}">
-            <i class="fas fa-calendar-alt me-2"></i>Gestion Événements
+        <a class="navbar-brand d-flex align-items-center animate__animated animate__fadeIn" href="{{ path('home') }}" aria-label="Gestion Événements - Accueil">
+            <i class="fas fa-calendar-alt me-2"></i>
+            <span class="fw-bold">Gestion Événements</span>
         </a>
         
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Ouvrir le menu de navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('home') }}">
-                        <i class="fas fa-home me-1"></i>Accueil
+                    <a class="nav-link d-flex align-items-center {{ app.request.attributes.get('_route') == 'home' ? 'active' : '' }}" href="{{ path('home') }}" aria-current="{{ app.request.attributes.get('_route') == 'home' ? 'page' : '' }}">
+                        <i class="fas fa-home me-1"></i> Accueil
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('event_public') }}">
-                        <i class="fas fa-calendar me-1"></i>Événements
+                    <a class="nav-link d-flex align-items-center {{ app.request.attributes.get('_route') == 'event_public' ? 'active' : '' }}" href="{{ path('event_public') }}" aria-current="{{ app.request.attributes.get('_route') == 'event_public' ? 'page' : '' }}">
+                        <i class="fas fa-calendar me-1"></i> Événements
                     </a>
                 </li>
                 {% if is_granted('ROLE_USER') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_profile') }}">
-                            <i class="fas fa-user me-1"></i>Mon profil
+                        <a class="nav-link d-flex align-items-center {{ app.request.attributes.get('_route') == 'user_profile' ? 'active' : '' }}" href="{{ path('user_profile') }}" aria-current="{{ app.request.attributes.get('_route') == 'user_profile' ? 'page' : '' }}">
+                            <i class="fas fa-user me-1"></i> Mon profil
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_registrations') }}">
-                            <i class="fas fa-list me-1"></i>Mes inscriptions
+                        <a class="nav-link d-flex align-items-center {{ app.request.attributes.get('_route') == 'user_registrations' ? 'active' : '' }}" href="{{ path('user_registrations') }}" aria-current="{{ app.request.attributes.get('_route') == 'user_registrations' ? 'page' : '' }}">
+                            <i class="fas fa-list me-1"></i> Mes inscriptions
                         </a>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-cogs me-1"></i>Administration
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cogs me-1"></i> Administration
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu rounded-3 shadow-sm animate__animated animate__fadeIn">
                             <li>
                                 <a class="dropdown-item" href="{{ path('admin_dashboard') }}">
-                                    <i class="fas fa-tachometer-alt me-2"></i>Tableau de bord
+                                    <i class="fas fa-tachometer-alt me-2"></i> Tableau de bord
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('admin_events') }}">
-                                    <i class="fas fa-calendar me-2"></i>Gestion événements
+                                    <i class="fas fa-calendar me-2"></i> Gestion événements
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('admin_users') }}">
-                                    <i class="fas fa-users me-2"></i>Gestion utilisateurs
+                                    <i class="fas fa-users me-2"></i> Gestion utilisateurs
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('admin_registrations') }}">
-                                    <i class="fas fa-list me-2"></i>Gestion inscriptions
+                                    <i class="fas fa-list me-2"></i> Gestion inscriptions
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('admin_categories') }}">
-                                    <i class="fas fa-tags me-2"></i>Gestion catégories
+                                    <i class="fas fa-tags me-2"></i> Gestion catégories
                                 </a>
                             </li>
                         </ul>
@@ -68,40 +72,40 @@
                 {% endif %}
             </ul>
             
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ms-auto">
                 {% if app.user %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i>{{ app.user.email }}
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle me-1"></i> {{ app.user.email }}
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        <ul class="dropdown-menu dropdown-menu-end rounded-3 shadow-sm animate__animated animate__fadeIn">
                             <li>
                                 <a class="dropdown-item" href="{{ path('user_profile') }}">
-                                    <i class="fas fa-user me-2"></i>Mon profil
+                                    <i class="fas fa-user me-2"></i> Mon profil
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('user_edit') }}">
-                                    <i class="fas fa-edit me-2"></i>Modifier profil
+                                    <i class="fas fa-edit me-2"></i> Modifier profil
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="{{ path('app_logout') }}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                                    <i class="fas fa-sign-out-alt me-2"></i> Déconnexion
                                 </a>
                             </li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">
-                            <i class="fas fa-sign-in-alt me-1"></i>Connexion
+                        <a class="nav-link d-flex align-items-center {{ app.request.attributes.get('_route') == 'app_login' ? 'active' : '' }}" href="{{ path('app_login') }}" aria-current="{{ app.request.attributes.get('_route') == 'app_login' ? 'page' : '' }}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Connexion
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">
-                            <i class="fas fa-user-plus me-1"></i>Inscription
+                        <a class="nav-link d-flex align-items-center btn btn-outline-light ms-2 rounded-pill px-3 {{ app.request.attributes.get('_route') == 'app_register' ? 'active' : '' }}" href="{{ path('app_register') }}" aria-current="{{ app.request.attributes.get('_route') == 'app_register' ? 'page' : '' }}">
+                            <i class="fas fa-user-plus me-1"></i> Inscription
                         </a>
                     </li>
                 {% endif %}
@@ -109,4 +113,90 @@
         </div>
     </div>
 </nav>
-  
+
+<!-- Styles -->
+<style>
+.navbar {
+    background: linear-gradient(145deg, #1e3a8a, #3b82f6);
+    padding: 1rem 0;
+    transition: all 0.3s ease-in-out;
+}
+.navbar.sticky-top {
+    z-index: 1030;
+}
+.navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: transform 0.3s ease-in-out;
+}
+.navbar-brand:hover {
+    transform: scale(1.05);
+}
+.nav-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease-in-out;
+    border-radius: 0.25rem;
+    color: #ffffff !important;
+}
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.15);
+    font-weight: 500;
+}
+.dropdown-menu {
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0;
+    animation-duration: 0.3s;
+}
+.dropdown-item {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease-in-out;
+}
+.dropdown-item:hover {
+    background: #f1f5f9;
+    color: #1e3a8a;
+}
+.btn-outline-light {
+    border-color: #ffffff;
+    transition: all 0.3s ease-in-out;
+}
+.btn-outline-light:hover {
+    background: #ffffff;
+    color: #1e3a8a;
+    transform: scale(1.05);
+}
+.navbar-toggler {
+    border: none;
+}
+.navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+}
+@media (max-width: 991px) {
+    .navbar-nav {
+        padding: 1rem;
+    }
+    .nav-link {
+        padding: 0.75rem 1rem !important;
+    }
+    .btn-outline-light {
+        width: fit-content;
+        margin-top: 0.5rem;
+    }
+}
+</style>
+
+<!-- Include Animate.css for animations -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% endblock %}
