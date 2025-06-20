@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registration index{% endblock %}
+
+{% block body %}
+    <h1>Registration index</h1>
+
+    <table class="table">
+        {% if is_granted('ROLE_ADMIN') and not registration.isConfirmed %}
+    <a href="{{ path('registration_confirm', {'id': registration.id}) }}">Confirmer</a>
+{% elseif registration.isConfirmed %}
+    <span>✅ Confirmée</span>
+{% else %}
+    <span>⌛ En attente</span>
+{% endif %}
+
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>RegisterdAt</th>
+                <th>IsConfirmed</th>
+                <th>RegisteredAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for registration in registrations %}
+            <tr>
+                <td>{{ registration.id }}</td>
+                <td>{{ registration.registerdAt ? registration.registerdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ registration.isConfirmed ? 'Yes' : 'No' }}</td>
+                <td>{{ registration.registeredAt ? registration.registeredAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_registration_show', {'id': registration.id}) }}">show</a>
+                    <a href="{{ path('app_registration_edit', {'id': registration.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_registration_new') }}">Create new</a>
+{% endblock %}

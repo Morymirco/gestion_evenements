@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Event index{% endblock %}
+
+{% block body %}
+    <h1>Event index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>EventDate</th>
+                <th>Location</th>
+                <th>PlaceAvailable</th>
+                <th>IsActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.id }}</td>
+                <td>{{ event.title }}</td>
+                <td>{{ event.description }}</td>
+                <td>{{ event.eventDate ? event.eventDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.location }}</td>
+                <td>{{ event.placeAvailable }}</td>
+                <td>{{ event.isActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+                    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_USER') %}
+    {% set isRegistered = false %}
+    {% for registration in event.registrations %}
+        {% if registration.user == app.user %}
+            {% set isRegistered = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if isRegistered %}
+        <a href="{{ path('event_unregister', {'id': event.id}) }}" class="btn btn-danger btn-sm">Se désinscrire</a>
+    {% else %}
+        <a href="{{ path('event_register', {'id': event.id}) }}" class="btn btn-primary btn-sm">S'inscrire</a>
+    {% endif %}
+    {% endif %}
+
+
+    <a href="{{ path('app_event_new') }}">Create new</a>
+

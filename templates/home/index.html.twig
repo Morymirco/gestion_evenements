@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="py-5 text-center bg-light rounded-3 shadow-sm">
+    <h1 class="display-5 fw-bold text-primary">Bienvenue à la plateforme d'événements !</h1>
+    <p class="lead">Découvrez, inscrivez-vous et participez à nos événements.</p>
+    <a href="{{ path('event_index') }}" class="btn btn-primary btn-lg mt-3">Voir les événements</a>
+</div>
+
+<section class="mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">🎯 Événements exclusifs</h5>
+                    <p class="card-text">Accédez à des événements soigneusement sélectionnés.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">✅ Inscriptions faciles</h5>
+                    <p class="card-text">Inscrivez-vous rapidement et facilement à vos événements préférés.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">🔒 Sécurité garantie</h5>
+                    <p class="card-text">Votre confidentialité et sécurité sont notre priorité absolue.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
