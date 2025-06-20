@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
-
 #[Route('/registration')]
 #[IsGranted('ROLE_USER')]
 final class RegistrationController extends AbstractController
@@ -30,6 +28,7 @@ final class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('registration_index');
     }
+
     #[Route(name: 'app_registration_index', methods: ['GET'])]
     public function index(RegistrationRepository $registrationRepository): Response
     {
@@ -93,58 +92,6 @@ final class RegistrationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_registration_index', [], Response::HTTP_SEE_OTHER);
-    }
-    
-    #[Route('/event/{id}/register', name: 'event_register')]
-    #[IsGranted('ROLE_USER')]
-    public function register(Event $event, EntityManagerInterface $em)
-    {
-        $user = $this->getUser();
-
-        // Vérifier si l'utilisateur est déjà inscrit
-        $existingRegistration = $em->getRepository(Registration::class)->findOneBy([
-            'user' => $user,
-            'event' => $event,
-        ]);
-
-        if ($existingRegistration) {
-            $this->addFlash('warning', 'Vous êtes déjà inscrit à cet événement.');
-        } else {
-            $registration = new Registration();
-            $registration->setUser($user);
-            $registration->setEvent($event);
-            $registration->setRegisteredAt(new \DateTimeImmutable());
-            $registration->setIsConfirmed(false); // En attente de confirmation par admin
-
-            $em->persist($registration);
-            $em->flush();
-
-            $this->addFlash('success', 'Inscription effectuée. En attente de confirmation.');
-        }
-
-        return $this->redirectToRoute('event_index');
-    }
-
-    #[Route('/event/{id}/unregister', name: 'event_unregister')]
-    #[IsGranted('ROLE_USER')]
-    public function unregister(Event $event, EntityManagerInterface $em)
-    {
-        $user = $this->getUser();
-
-        $registration = $em->getRepository(Registration::class)->findOneBy([
-            'user' => $user,
-            'event' => $event,
-        ]);
-
-        if ($registration) {
-            $em->remove($registration);
-            $em->flush();
-            $this->addFlash('success', 'Vous êtes désinscrit avec succès.');
-        } else {
-            $this->addFlash('warning', 'Vous n’êtes pas inscrit à cet événement.');
-        }
-
-        return $this->redirectToRoute('event_index');
     }
 }
 

@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes inscriptions{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-calendar-check me-2"></i>Mes inscriptions
+                </h1>
+                <a href="{{ path('user_profile') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Retour au profil
+                </a>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    {% if registrations|length > 0 %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Événement</th>
+                                        <th>Date de l'événement</th>
+                                        <th>Lieu</th>
+                                        <th>Date d'inscription</th>
+                                        <th>Statut</th>
+                                        <th width="150">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for registration in registrations %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        {% if registration.event.category %}
+                                                            <span class="badge bg-secondary">{{ registration.event.category.name }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div>
+                                                        <strong>{{ registration.event.title }}</strong>
+                                                        <small class="text-muted d-block">{{ registration.event.description|slice(0, 50) }}...</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-clock me-2 text-muted"></i>
+                                                    <div>
+                                                        <div>{{ registration.event.eventDate|date('d/m/Y') }}</div>
+                                                        <small class="text-muted">{{ registration.event.eventDate|date('H:i') }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-map-marker-alt me-1 text-muted"></i>
+                                                {{ registration.event.location }}
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-calendar-plus me-2 text-muted"></i>
+                                                    <div>
+                                                        <div>{{ registration.registeredAt|date('d/m/Y') }}</div>
+                                                        <small class="text-muted">{{ registration.registeredAt|date('H:i') }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% if registration.isConfirmed %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check me-1"></i>Confirmée
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">
+                                                        <i class="fas fa-clock me-1"></i>En attente
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ path('app_event_show', {id: registration.event.id}) }}" 
+                                                       class="btn btn-outline-info btn-sm" 
+                                                       title="Voir l'événement">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    {% if not registration.isConfirmed %}
+                                                        <form method="post" action="{{ path('event_unregister', {id: registration.event.id}) }}" 
+                                                              style="display:inline-block;" 
+                                                              onsubmit="return confirm('Êtes-vous sûr de vouloir vous désinscrire ?')">
+                                                            <button class="btn btn-outline-danger btn-sm" title="Se désinscrire">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </form>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-calendar-times fa-3x mb-3"></i>
+                            <h4>Aucune inscription</h4>
+                            <p class="mb-4">Vous n'êtes inscrit à aucun événement pour le moment.</p>
+                            <a href="{{ path('event_index') }}" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>Découvrir les événements
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            {% if registrations|length > 0 %}
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body text-center">
+                                <h4>{{ registrations|length }}</h4>
+                                <p class="mb-0">Total inscriptions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white">
+                            <div class="card-body text-center">
+                                <h4>{{ registrations|filter(r => r.isConfirmed)|length }}</h4>
+                                <p class="mb-0">Confirmées</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white">
+                            <div class="card-body text-center">
+                                <h4>{{ registrations|filter(r => not r.isConfirmed)|length }}</h4>
+                                <p class="mb-0">En attente</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white">
+                            <div class="card-body text-center">
+                                <h4>{{ registrations|filter(r => r.event.eventDate > "now")|length }}</h4>
+                                <p class="mb-0">À venir</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

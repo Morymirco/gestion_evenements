@@ -37,11 +37,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Registration>
      */
     #[ORM\OneToMany(targetEntity: Registration::class, mappedBy: 'user')]
-    private Collection $event;
+    private Collection $registrations;
 
     public function __construct()
     {
-        $this->event = new ArrayCollection();
+        $this->registrations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -120,27 +120,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Registration>
      */
-    public function getEvent(): Collection
+    public function getRegistrations(): Collection
     {
-        return $this->event;
+        return $this->registrations;
     }
 
-    public function addEvent(Registration $event): static
+    public function addRegistration(Registration $registration): static
     {
-        if (!$this->event->contains($event)) {
-            $this->event->add($event);
-            $event->setUser($this);
+        if (!$this->registrations->contains($registration)) {
+            $this->registrations->add($registration);
+            $registration->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeEvent(Registration $event): static
+    public function removeRegistration(Registration $registration): static
     {
-        if ($this->event->removeElement($event)) {
+        if ($this->registrations->removeElement($registration)) {
             // set the owning side to null (unless already changed)
-            if ($event->getUser() === $this) {
-                $event->setUser(null);
+            if ($registration->getUser() === $this) {
+                $registration->setUser(null);
             }
         }
 

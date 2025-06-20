@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des utilisateurs{% endblock %}
+{% block body %}
+<h1>Gestion des utilisateurs</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Rôles</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.roles|join(', ') }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3">Aucun utilisateur</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a href="{{ path('admin_dashboard') }}" class="btn btn-secondary">Retour</a>
+{% endblock %} 

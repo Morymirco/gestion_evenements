@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Gestion des événements{% endblock %}
-
 {% block body %}
 <div class="container-fluid">
     <div class="row">
@@ -10,15 +8,17 @@
                 <h1 class="h3 mb-0">
                     <i class="fas fa-calendar me-2"></i>Gestion des événements
                 </h1>
-                <div>
-                    <a href="{{ path('event_public') }}" class="btn btn-outline-primary me-2">
-                        <i class="fas fa-eye me-1"></i>Voir les événements publics
-                    </a>
-                    <a href="{{ path('app_event_new') }}" class="btn btn-success">
-                        <i class="fas fa-plus me-1"></i>Créer un événement
-                    </a>
-                </div>
+                <a href="{{ path('admin_event_new') }}" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i>Nouvel événement
+                </a>
             </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
 
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -26,7 +26,7 @@
                         <table class="table table-hover">
                             <thead class="table-light">
                                 <tr>
-                                    <th width="60">ID</th>
+                                    <th width="80">ID</th>
                                     <th>Titre</th>
                                     <th>Date</th>
                                     <th>Lieu</th>
@@ -71,16 +71,19 @@
                                     </td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a href="{{ path('app_event_show', {'id': event.id}) }}" 
-                                               class="btn btn-outline-info btn-sm" 
-                                               title="Voir">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ path('app_event_edit', {'id': event.id}) }}" 
+                                            <a href="{{ path('admin_event_edit', {id: event.id}) }}" 
                                                class="btn btn-outline-primary btn-sm" 
                                                title="Éditer">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            <form method="post" action="{{ path('admin_event_delete', {id: event.id}) }}" 
+                                                  style="display:inline-block;" 
+                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?')">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                                                <button class="btn btn-outline-danger btn-sm" title="Supprimer">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -89,7 +92,7 @@
                                     <td colspan="7" class="text-center text-muted py-4">
                                         <i class="fas fa-calendar-times fa-2x mb-3"></i>
                                         <p>Aucun événement trouvé</p>
-                                        <a href="{{ path('app_event_new') }}" class="btn btn-primary">Créer le premier événement</a>
+                                        <a href="{{ path('admin_event_new') }}" class="btn btn-primary">Créer le premier événement</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -98,8 +101,13 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mt-3">
+                <a href="{{ path('admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Retour au dashboard
+                </a>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
-
+{% endblock %} 

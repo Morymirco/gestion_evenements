@@ -1,0 +1,271 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mon Profil{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-user me-2"></i>Mon Profil
+                </h1>
+                <div>
+                    <a href="{{ path('event_public') }}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-calendar me-1"></i>Voir les événements
+                    </a>
+                    <a href="{{ path('user_edit') }}" class="btn btn-primary">
+                        <i class="fas fa-edit me-1"></i>Modifier le profil
+                    </a>
+                </div>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error') %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+
+            <div class="row">
+                <!-- Informations personnelles -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Informations personnelles
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Email :</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <i class="fas fa-envelope me-1 text-muted"></i>{{ user.email }}
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Rôles :</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    {% for role in user.roles %}
+                                        {% if role == 'ROLE_ADMIN' %}
+                                            <span class="badge bg-danger me-1">
+                                                <i class="fas fa-crown me-1"></i>{{ role }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-primary me-1">{{ role }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Statut :</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Compte actif
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <strong>Membre depuis :</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="text-muted">
+                                        <i class="fas fa-calendar-plus me-1"></i>Date d'inscription non disponible
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions rapides -->
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-bolt me-2"></i>Actions rapides
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{{ path('event_public') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-search me-1"></i>Découvrir des événements
+                                </a>
+                                <a href="{{ path('user_registrations') }}" class="btn btn-outline-info">
+                                    <i class="fas fa-list me-1"></i>Voir toutes mes inscriptions
+                                </a>
+                                <a href="{{ path('user_edit') }}" class="btn btn-outline-warning">
+                                    <i class="fas fa-cog me-1"></i>Paramètres du compte
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistiques -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Mes statistiques
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <h3 class="text-primary mb-1">{{ user.registrations|length }}</h3>
+                                        <p class="text-muted mb-0">Inscriptions totales</p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h3 class="text-success mb-1">{{ user.registrations|filter(r => r.isConfirmed)|length }}</h3>
+                                    <p class="text-muted mb-0">Inscriptions confirmées</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="border-end">
+                                        <h3 class="text-warning mb-1">{{ user.registrations|filter(r => not r.isConfirmed)|length }}</h3>
+                                        <p class="text-muted mb-0">En attente</p>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <h3 class="text-info mb-1">{{ user.registrations|filter(r => r.event.isActive and r.event.eventDate > "now")|length }}</h3>
+                                    <p class="text-muted mb-0">Événements à venir</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prochain événement -->
+                    {% set nextEvent = user.registrations|filter(r => r.event.eventDate > "now" and r.event.isActive)|sort((a, b) => a.event.eventDate <=> b.event.eventDate)|first %}
+                    {% if nextEvent %}
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-calendar-check me-2"></i>Mon prochain événement
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">{{ nextEvent.event.title }}</h6>
+                                <p class="card-text text-muted">{{ nextEvent.event.description|slice(0, 80) }}...</p>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted">
+                                        <i class="fas fa-clock me-1"></i>{{ nextEvent.event.eventDate|date('d/m/Y H:i') }}
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ nextEvent.event.location }}
+                                    </small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if nextEvent.isConfirmed %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>Confirmée
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock me-1"></i>En attente
+                                        </span>
+                                    {% endif %}
+                                    <a href="{{ path('event_details', {id: nextEvent.event.id}) }}" class="btn btn-sm btn-outline-primary">
+                                        Voir détails
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Dernières inscriptions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-calendar-check me-2"></i>Mes dernières inscriptions
+                            </h5>
+                            <a href="{{ path('user_registrations') }}" class="btn btn-outline-primary btn-sm">
+                                Voir toutes
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            {% if user.registrations|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Événement</th>
+                                                <th>Date de l'événement</th>
+                                                <th>Date d'inscription</th>
+                                                <th>Statut</th>
+                                                <th width="100">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for registration in user.registrations|slice(0, 5) %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ registration.event.title }}</strong>
+                                                        <small class="text-muted d-block">
+                                                            <i class="fas fa-map-marker-alt me-1"></i>{{ registration.event.location }}
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <i class="fas fa-clock me-1 text-muted"></i>
+                                                        {{ registration.event.eventDate|date('d/m/Y H:i') }}
+                                                    </td>
+                                                    <td>
+                                                        <i class="fas fa-calendar-plus me-1 text-muted"></i>
+                                                        {{ registration.registeredAt|date('d/m/Y H:i') }}
+                                                    </td>
+                                                    <td>
+                                                        {% if registration.isConfirmed %}
+                                                            <span class="badge bg-success">
+                                                                <i class="fas fa-check me-1"></i>Confirmée
+                                                            </span>
+                                                        {% else %}
+                                                            <span class="badge bg-warning">
+                                                                <i class="fas fa-clock me-1"></i>En attente
+                                                            </span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ path('event_details', {id: registration.event.id}) }}" 
+                                                           class="btn btn-outline-info btn-sm" 
+                                                           title="Voir l'événement">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="text-center text-muted py-4">
+                                    <i class="fas fa-calendar-times fa-2x mb-3"></i>
+                                    <p>Aucune inscription pour le moment</p>
+                                    <a href="{{ path('event_public') }}" class="btn btn-primary">Découvrir les événements</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}{{ event.title }}{% endblock %}
-
 {% block body %}
 <div class="container-fluid">
     <div class="row">
@@ -77,33 +75,6 @@
                             <div class="mb-4">
                                 <h6>Description</h6>
                                 <p class="text-muted">{{ event.description }}</p>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <i class="fas fa-users fa-2x text-info me-3"></i>
-                                        <div>
-                                            <h6 class="mb-1">Places disponibles</h6>
-                                            <p class="mb-0 fw-bold">{{ event.placeAvailable }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <i class="fas fa-toggle-on fa-2x text-warning me-3"></i>
-                                        <div>
-                                            <h6 class="mb-1">Statut</h6>
-                                            <p class="mb-0">
-                                                {% if event.isActive %}
-                                                    <span class="badge bg-success">Actif</span>
-                                                {% else %}
-                                                    <span class="badge bg-secondary">Inactif</span>
-                                                {% endif %}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             {% if event.category %}
@@ -209,34 +180,7 @@
                     </div>
                 </div>
             </div>
-
-            {% if is_granted('ROLE_ADMIN') %}
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="fas fa-cogs me-2"></i>Actions d'administration
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="d-flex gap-2">
-                                    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">
-                                        <i class="fas fa-edit me-1"></i>Modifier
-                                    </a>
-                                    <form method="post" action="{{ path('app_event_delete', {'id': event.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="fas fa-trash me-1"></i>Supprimer
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %} 

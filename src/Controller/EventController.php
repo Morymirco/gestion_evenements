@@ -13,10 +13,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/event')]
-#[IsGranted('ROLE_ADMIN')]
 final class EventController extends AbstractController
 {
     #[Route(name: 'event_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(EventRepository $eventRepository): Response
     {
         return $this->render('event/index.html.twig', [
@@ -25,6 +25,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $event = new Event();
@@ -35,7 +36,7 @@ final class EventController extends AbstractController
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/new.html.twig', [
@@ -53,6 +54,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(EventForm::class, $event);
@@ -61,7 +63,7 @@ final class EventController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/edit.html.twig', [
@@ -71,6 +73,7 @@ final class EventController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->getPayload()->getString('_token'))) {
@@ -78,6 +81,6 @@ final class EventController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('event_index', [], Response::HTTP_SEE_OTHER);
     }
 }

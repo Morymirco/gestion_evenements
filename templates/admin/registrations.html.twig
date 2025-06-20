@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des inscriptions{% endblock %}
+{% block body %}
+<h1>Gestion des inscriptions</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Utilisateur</th>
+            <th>Événement</th>
+            <th>Date d'inscription</th>
+            <th>Confirmée</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for registration in registrations %}
+        <tr>
+            <td>{{ registration.id }}</td>
+            <td>{{ registration.user ? registration.user.email : '' }}</td>
+            <td>{{ registration.event ? registration.event.title : '' }}</td>
+            <td>{{ registration.registeredAt ? registration.registeredAt|date('d/m/Y H:i') : '' }}</td>
+            <td>{{ registration.isConfirmed ? 'Oui' : 'Non' }}</td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5">Aucune inscription</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a href="{{ path('admin_dashboard') }}" class="btn btn-secondary">Retour</a>
+{% endblock %} 
