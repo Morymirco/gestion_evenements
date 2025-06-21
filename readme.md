@@ -3,6 +3,18 @@
 <!-- screenshot -->
 ![Screenshot of Template Output](/public/screenshot.png)
 
+#HOMEPAGE
+![HOMEPAGE](/public/homepage.png)
+
+#LOGIN
+![LOGIN](/public/login.png)
+
+#EVENT
+![EVENT](/public/events.png)
+
+#PROFILE
+![PROFILE](/public/profile.png)
+
 ## 🎯 Objectif du projet
 Application Symfony pour la gestion d'événements avec système d'authentification et rôles (visiteur, utilisateur, administrateur).
 
