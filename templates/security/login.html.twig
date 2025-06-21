@@ -1,34 +1,123 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion - Gestion Événements{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+<section class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 col-sm-10">
+            <div class="card border-0 shadow-lg rounded-4 animate__animated animate__fadeIn">
+                <div class="card-body p-5">
+                    <h1 class="h3 mb-4 fw-bold text-center">
+                        <i class="fas fa-sign-in-alt me-2 text-primary"></i>Connexion
+                    </h1>
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    {% if error %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="alert alert-info">
+                            Vous êtes déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.
+                            <a href="{{ path('app_logout') }}">Déconnexion</a>
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="inputEmail" class="form-label fw-semibold">Adresse e-mail</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="email" id="inputEmail" value="{{ last_username }}"
+                                       class="form-control rounded-end" required autocomplete="email" autofocus>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="inputPassword" class="form-label fw-semibold">Mot de passe</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password" id="inputPassword"
+                                       class="form-control rounded-end" required autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="_remember_me">
+                            <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm">
+                            <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <p class="text-muted mb-0">
+                                Pas encore de compte ?
+                                <a href="{{ path('app_register') }}" class="text-primary fw-semibold">Créer un compte</a>
+                            </p>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
-    {% endif %}
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
     </div>
+</section>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+<!-- Styles -->
+<style>
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8fafc;
+}
+.card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+.form-control, .input-group-text {
+    border-radius: 0.5rem;
+    transition: all 0.3s ease-in-out;
+}
+.form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+}
+.input-group-text {
+    background: #f1f5f9;
+    border: 1px solid #d1d5db;
+}
+.btn-primary {
+    background: linear-gradient(145deg, #1e3a8a, #3b82f6);
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+.btn-primary:hover {
+    transform: scale(1.05);
+    background: linear-gradient(145deg, #1e40af, #60a5fa);
+}
+.invalid-feedback {
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+h1 {
+    font-family: 'Poppins', sans-serif;
+}
+@media (max-width: 576px) {
+    .card-body {
+        padding: 2rem;
+    }
+}
+</style>
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 {% endblock %}
