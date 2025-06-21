@@ -4,24 +4,23 @@
 
 {% block body %}
 <!-- Hero Section -->
-<div class="hero-section bg-primary text-white py-5">
+<section class="hero-section text-white d-flex align-items-center py-5">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4">
-                    <i class="fas fa-calendar-alt me-3"></i>
-                    Gestion Événements
+                    <i class="fas fa-calendar-alt me-3"></i>Gestion Événements
                 </h1>
                 <p class="lead mb-4">
-                    Découvrez, inscrivez-vous et participez à des événements exceptionnels. 
+                    Découvrez, inscrivez-vous et participez à des événements exceptionnels.<br>
                     Notre plateforme vous connecte aux meilleurs événements de votre région.
                 </p>
-                <div class="d-flex gap-3">
-                    <a href="{{ path('event_public') }}" class="btn btn-light btn-lg">
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{{ path('event_public') }}" class="btn btn-light btn-lg shadow-sm px-4 py-2 rounded-pill">
                         <i class="fas fa-calendar me-2"></i>Voir les événements
                     </a>
                     {% if not app.user %}
-                        <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg">
+                        <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg shadow-sm px-4 py-2 rounded-pill">
                             <i class="fas fa-user-plus me-2"></i>S'inscrire
                         </a>
                     {% endif %}
@@ -32,72 +31,53 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Statistiques -->
-<div class="container mt-5">
+<section class="container mt-5">
     <div class="row text-center">
-        <div class="col-md-3 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <i class="fas fa-calendar fa-3x text-primary mb-3"></i>
-                    <h3 class="text-primary fw-bold">{{ stats.total_events }}</h3>
-                    <p class="text-muted mb-0">Événements créés</p>
+        {% set statsIcons = {
+            'total_events': ['calendar', 'text-primary'],
+            'active_events': ['calendar-day', 'text-success'],
+            'total_users': ['users', 'text-info'],
+            'total_registrations': ['ticket-alt', 'text-warning']
+        } %}
+        {% for key, value in statsIcons %}
+            <div class="col-md-3 mb-4">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body">
+                        <i class="fas fa-{{ value[0] }} fa-3x {{ value[1] }} mb-3"></i>
+                        <h3 class="{{ value[1] }} fw-bold">{{ attribute(stats, key) }}</h3>
+                        <p class="text-muted mb-0">
+                            {{ key == 'total_events' ? 'Événements créés' :
+                               key == 'active_events' ? 'Événements actifs' :
+                               key == 'total_users' ? 'Utilisateurs inscrits' : 'Inscriptions totales' }}
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <i class="fas fa-calendar-day fa-3x text-success mb-3"></i>
-                    <h3 class="text-success fw-bold">{{ stats.active_events }}</h3>
-                    <p class="text-muted mb-0">Événements actifs</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <i class="fas fa-users fa-3x text-info mb-3"></i>
-                    <h3 class="text-info fw-bold">{{ stats.total_users }}</h3>
-                    <p class="text-muted mb-0">Utilisateurs inscrits</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <i class="fas fa-ticket-alt fa-3x text-warning mb-3"></i>
-                    <h3 class="text-warning fw-bold">{{ stats.total_registrations }}</h3>
-                    <p class="text-muted mb-0">Inscriptions totales</p>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-</div>
+</section>
 
 <!-- Événements à venir -->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="h3 mb-0">
-                    <i class="fas fa-clock me-2 text-primary"></i>Événements à venir
-                </h2>
-                <a href="{{ path('event_public') }}" class="btn btn-outline-primary">
-                    Voir tous les événements
-                </a>
-            </div>
-        </div>
+<section class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h3">
+            <i class="fas fa-clock me-2 text-primary"></i>Événements à venir
+        </h2>
+        <a href="{{ path('event_public') }}" class="btn btn-outline-primary rounded-pill px-4">
+            Voir tous les événements
+        </a>
     </div>
 
     {% if upcomingEvents|length > 0 %}
         <div class="row">
             {% for event in upcomingEvents %}
                 <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100 shadow-sm border-0">
+                    <div class="card h-100 shadow-sm border-0 rounded-4">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex justify-content-between mb-3">
                                 {% if event.category %}
                                     <span class="badge bg-primary">{{ event.category.name }}</span>
                                 {% endif %}
@@ -105,30 +85,23 @@
                                     <i class="fas fa-check me-1"></i>Actif
                                 </span>
                             </div>
-                            
                             <h5 class="card-title">{{ event.title }}</h5>
-                            <p class="card-text text-muted">{{ event.description|slice(0, 80) }}...</p>
-                            
+                            <p class="text-muted">{{ event.description|slice(0, 80) }}...</p>
                             <div class="row mb-3">
-                                <div class="col-6">
-                                    <small class="text-muted">
-                                        <i class="fas fa-clock me-1"></i>Date
-                                    </small>
+                                <div class="col-6 small text-muted">
+                                    <i class="fas fa-clock me-1"></i> Date
                                     <div class="fw-bold">{{ event.eventDate|date('d/m/Y H:i') }}</div>
                                 </div>
-                                <div class="col-6">
-                                    <small class="text-muted">
-                                        <i class="fas fa-map-marker-alt me-1"></i>Lieu
-                                    </small>
+                                <div class="col-6 small text-muted">
+                                    <i class="fas fa-map-marker-alt me-1"></i> Lieu
                                     <div class="fw-bold">{{ event.location }}</div>
                                 </div>
                             </div>
-                            
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between">
                                 <span class="badge bg-info">
                                     <i class="fas fa-users me-1"></i>{{ event.placeAvailable }} places
                                 </span>
-                                <a href="{{ path('event_details', {id: event.id}) }}" class="btn btn-sm btn-outline-primary">
+                                <a href="{{ path('event_details', {id: event.id}) }}" class="btn btn-sm btn-outline-primary rounded-pill">
                                     <i class="fas fa-info-circle me-1"></i>Détails
                                 </a>
                             </div>
@@ -144,104 +117,62 @@
             <p class="text-muted">Revenez bientôt pour découvrir de nouveaux événements !</p>
         </div>
     {% endif %}
-</div>
+</section>
 
 <!-- Fonctionnalités -->
-<div class="container mt-5">
+<section class="container mt-5">
+    <h2 class="h3 text-center mb-5">
+        <i class="fas fa-star me-2 text-warning"></i>Pourquoi choisir notre plateforme ?
+    </h2>
     <div class="row">
-        <div class="col-12">
-            <h2 class="h3 text-center mb-5">
-                <i class="fas fa-star me-2 text-warning"></i>Pourquoi choisir notre plateforme ?
-            </h2>
-        </div>
-    </div>
-    
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-search fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Découverte facile</h5>
-                    <p class="card-text">
-                        Parcourez facilement notre catalogue d'événements avec des filtres avancés 
-                        et une recherche intuitive.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-mobile-alt fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">Accessible partout</h5>
-                    <p class="card-text">
-                        Interface responsive qui s'adapte à tous vos appareils. 
-                        Gérez vos inscriptions depuis votre mobile, tablette ou ordinateur.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <i class="fas fa-shield-alt fa-3x text-info mb-3"></i>
-                    <h5 class="card-title">Sécurisé et fiable</h5>
-                    <p class="card-text">
-                        Vos données sont protégées et vos inscriptions sont gérées 
-                        de manière sécurisée par notre équipe.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Call to Action -->
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="card bg-primary text-white text-center border-0 shadow">
-                <div class="card-body py-5">
-                    <h3 class="mb-3">
-                        <i class="fas fa-rocket me-2"></i>Prêt à commencer ?
-                    </h3>
-                    <p class="lead mb-4">
-                        Rejoignez notre communauté et ne manquez plus aucun événement !
-                    </p>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a href="{{ path('event_public') }}" class="btn btn-light btn-lg">
-                            <i class="fas fa-calendar me-2"></i>Explorer les événements
-                        </a>
-                        {% if not app.user %}
-                            <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-user-plus me-2"></i>Créer un compte
-                            </a>
-                        {% endif %}
+        {% set features = [
+            {'icon': 'search', 'title': 'Découverte facile', 'desc': "Parcourez facilement notre catalogue d'événements avec des filtres avancés et une recherche intuitive.", 'color': 'text-primary'},
+            {'icon': 'mobile-alt', 'title': 'Accessible partout', 'desc': "Interface responsive sur tous vos appareils : mobile, tablette ou ordinateur.", 'color': 'text-success'},
+            {'icon': 'shield-alt', 'title': 'Sécurisé et fiable', 'desc': "Vos données sont protégées et vos inscriptions gérées de manière sécurisée.", 'color': 'text-info'}
+        ] %}
+        {% for f in features %}
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 shadow-sm h-100 text-center rounded-4">
+                    <div class="card-body">
+                        <i class="fas fa-{{ f.icon }} fa-3x {{ f.color }} mb-3"></i>
+                        <h5 class="card-title">{{ f.title }}</h5>
+                        <p class="card-text">{{ f.desc }}</p>
                     </div>
                 </div>
             </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="container mt-5">
+    <div class="card bg-primary text-white text-center border-0 shadow rounded-4">
+        <div class="card-body py-5">
+            <h3 class="mb-3"><i class="fas fa-rocket me-2"></i>Prêt à commencer ?</h3>
+            <p class="lead mb-4">Rejoignez notre communauté et ne manquez plus aucun événement !</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{{ path('event_public') }}" class="btn btn-light btn-lg rounded-pill px-4 py-2">
+                    <i class="fas fa-calendar me-2"></i>Explorer les événements
+                </a>
+                {% if not app.user %}
+                    <a href="{{ path('app_register') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 py-2">
+                        <i class="fas fa-user-plus me-2"></i>Créer un compte
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
+</section>
 
+<!-- Styles -->
 <style>
 .hero-section {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    min-height: 400px;
-    display: flex;
-    align-items: center;
+    background: linear-gradient(145deg, #0056b3, #007bff);
+    min-height: 450px;
 }
-
-.card {
-    transition: transform 0.2s ease-in-out;
-}
-
 .card:hover {
-    transform: translateY(-5px);
-}
-
-.fa-8x {
-    font-size: 8rem;
+    transform: translateY(-6px);
+    transition: all 0.2s ease-in-out;
 }
 </style>
 {% endblock %}

@@ -1,5 +1,8 @@
 # Guide de Présentation - Gestion Événements
 
+<!-- screenshot -->
+![screenshot](screenshot.png)
+
 ## 🎯 Objectif du projet
 Application Symfony pour la gestion d'événements avec système d'authentification et rôles (visiteur, utilisateur, administrateur).
 

@@ -13,55 +13,57 @@
                     </h1>
 
                     {% if error %}
-                        <div class="alert alert-danger alert-dismissible fade show rounded-3" role="alert">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
                             {{ error.messageKey|trans(error.messageData, 'security') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endif %}
 
                     {% if app.user %}
-                        <div class="mb-3 text-center">
-                            Vous êtes connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.
-                            <a href="{{ path('app_logout') }}" class="btn btn-outline-primary btn-sm rounded-pill ms-2">
-                                <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
-                            </a>
+                        <div class="alert alert-info">
+                            Vous êtes déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.
+                            <a href="{{ path('app_logout') }}">Déconnexion</a>
                         </div>
-                    {% else %}
-                        <form method="post">
-                            <div class="mb-4">
-                                <label for="inputEmail" class="form-label fw-semibold">Email</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
-                                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control rounded-end" autocomplete="email" required autofocus>
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label for="inputPassword" class="form-label fw-semibold">Mot de passe</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
-                                    <input type="password" name="password" id="inputPassword" class="form-control rounded-end" autocomplete="current-password" required>
-                                </div>
-                            </div>
-                            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-                            <div class="form-check mb-4">
-                                <input class="form-check-input" type="checkbox" name="_remember_me" id="rememberMe">
-                                <label class="form-check-label" for="rememberMe">
-                                    Se souvenir de moi
-                                </label>
-                            </div>
-
-                            <button class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm" type="submit">
-                                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
-                            </button>
-
-                            <div class="text-center mt-3">
-                                <p class="text-muted mb-0">
-                                    Pas de compte ? <a href="{{ path('app_register') }}" class="text-primary fw-semibold">Inscrivez-vous</a>
-                                </p>
-                            </div>
-                        </form>
                     {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        <div class="mb-4">
+                            <label for="inputEmail" class="form-label fw-semibold">Adresse e-mail</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                <input type="email" name="email" id="inputEmail" value="{{ last_username }}"
+                                       class="form-control rounded-end" required autocomplete="email" autofocus>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="inputPassword" class="form-label fw-semibold">Mot de passe</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                <input type="password" name="password" id="inputPassword"
+                                       class="form-control rounded-end" required autocomplete="current-password">
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="form-check mb-4">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="_remember_me">
+                            <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm">
+                            <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <p class="text-muted mb-0">
+                                Pas encore de compte ?
+                                <a href="{{ path('app_register') }}" class="text-primary fw-semibold">Créer un compte</a>
+                            </p>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -102,12 +104,9 @@ body {
     transform: scale(1.05);
     background: linear-gradient(145deg, #1e40af, #60a5fa);
 }
-.alert {
-    border-radius: 0.5rem;
-}
-.form-check-input:checked {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+.invalid-feedback {
+    font-size: 0.875rem;
+    color: #dc3545;
 }
 h1 {
     font-family: 'Poppins', sans-serif;
@@ -119,6 +118,6 @@ h1 {
 }
 </style>
 
-<!-- Include Animate.css for animations -->
+<!-- Animate.css -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 {% endblock %}
